@@ -44,6 +44,37 @@ Make sure you have the following requirements installed on your system:
    ```bash
    git clone https://github.com/KevEstr/Drools_Rules_Springboot.git
 
+2. **🌐 API Endpoints**
+
+The system exposes the following endpoint for loan evaluation:
+
+**Evaluate Loan Application**
+
+- **URL**: `/evaluar-prestamo`
+- **Method**: `POST`
+- **Description**: This endpoint evaluates a participant's loan application based on predefined business rules and returns the loan status (approved or rejected) and the corresponding interest rate.
+  
+- **Request Body Example** (JSON):
+
+  ```json
+  {
+    "name": "John Doe",
+    "age": 35,
+    "creditScore": 680,
+    "annualSalary": 55000,
+    "existingDebt": 8000,
+    "loanAmount": 15000,
+    "employmentStatus": "Employed",
+    "maritalStatus": "Married",
+    "dependents": 2,
+    "residentialStatus": "Homeowner",
+    "loanPurpose": "home_improvement",
+    "monthlyExpenses": 1200,
+    "employmentDuration": 5,
+    "creditUsage": 50,
+    "usageDuration": 12
+  }
+
 ### Important Files 📂
 src/main/resources/rules/loan-rules.drl: Drools rule file.
 src/main/java/com/udea/labFundamentos/controller/LoanController.java: REST controller that exposes the evaluation service.
