@@ -33,9 +33,9 @@ Based on these rules, a participant can either receive a **loan approval** or **
 ### Prerequisites 📝
 Make sure you have the following requirements installed on your system:
 
-- **Java 11 or higher** ☕
-- **Maven** 📦
-- **IntelliJ IDEA** 💡 (with Spring Boot support)
+- **Java 11 or higher** 
+- **Maven** 
+- **IntelliJ IDEA**  (with Spring Boot support)
 
 ### Execution Steps ⚡
 
