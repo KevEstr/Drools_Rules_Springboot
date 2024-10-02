@@ -1,0 +1,164 @@
+import com.udea.labFundamentos.model.Participant;
+global com.udea.labFundamentos.model.Rate rate;
+dialect "mvel"
+
+// Rule for checking number of dependents
+rule "Checking Number of Dependents"
+when
+    Participant(dependents > 3)
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Rejected - Too Many Dependents");
+    rate.setLoanRate(999);
+    }
+end
+
+// Rule for checking high monthly expenses
+rule "Checking High Monthly Expenses"
+when
+    Participant(monthlyExpenses > (annualSalary / 12) * 0.5)
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Rejected - High Monthly Expenses");
+    rate.setLoanRate(999);
+    }
+end
+
+// Rule for checking dependents and low salary
+rule "Checking Dependents and Low Salary"
+when
+    Participant(dependents > 2 && annualSalary < 60000)
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Rejected - Low Salary with Dependents");
+    rate.setLoanRate(999);
+    }
+end
+
+// Rule for checking employment status
+rule "Checking Employment Status"
+when
+    Participant(employmentStatus.equals("Unemployed"))
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Rejected - Unemployed");
+    rate.setLoanRate(999);
+    }
+end
+
+// Rule for checking residential status
+rule "Checking Residential Status"
+when
+    Participant(residentialStatus != "Homeowner")
+then
+    if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+        rate.setLoanStatus("Approved");
+        rate.setLoanRate(7.5);
+        }
+end
+
+// Rule for checking loan purpose for vacation
+rule "Checking Loan Purpose for Vacation"
+when
+    Participant(loanPurpose.equals("vacation"))
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Rejected - Loan for Vacation, offer a credit card instead");
+    rate.setLoanRate(999);
+    }
+end
+
+// Rule for checking marital status
+rule "Checking Marital Status"
+when
+    Participant(maritalStatus.equals("Single"))
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Approved");
+    rate.setLoanRate(7.0);
+    }
+end
+
+// Rule for checking marital status divorced
+rule "Checking Marital Status Divorced"
+when
+    Participant(maritalStatus.equals("Divorced"))
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Approved");
+    rate.setLoanRate(7.75);
+    }
+end
+
+// Rule for checking pensioned status
+rule "Checking Pensioned Status"
+when
+    Participant(employmentStatus.equals("Pensioned"))
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Approved");
+    rate.setLoanRate(6.5);
+    }
+end
+
+rule "Rejection for less than 1 year of employment"
+when
+    Participant(employmentDuration < 1)
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Rejected - Less than 1 year of employment");
+    rate.setLoanRate(999);
+    }
+end
+
+rule "Rejection due to high debt and low score"
+when
+    Participant(existingDebt > (annualSalary * 0.4), creditScore < 600)
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Rejected - High debt and low credit score");
+    rate.setLoanRate(999);
+    }
+end
+
+// Recompensa de tasa cero por no utilización de línea de crédito
+rule "Zero rate for non-use"
+when
+    Participant(creditUsage == 0, usageDuration >= 6)
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Rewarded - 0% interest rate for next loan");
+    rate.setLoanRate(0);
+    }
+end
+
+// Credit score rules with conditions to avoid overriding approvals
+rule "Checking Credit Score less than 650"
+when
+    Participant(creditScore < 650 && creditScore >= 550, annualSalary > 50000, loanAmount < (2 * existingDebt))
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Approved");
+    rate.setLoanRate(7.25);
+    }
+end
+
+rule "Checking Credit Score less than 750"
+when
+    Participant(creditScore < 750 && creditScore >= 650, annualSalary > 50000, loanAmount < (2 * existingDebt))
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Approved");
+    rate.setLoanRate(6.25);
+    }
+end
+
+rule "Checking Credit Score greater than 750"
+when
+    Participant(creditScore >= 750, annualSalary > 50000, loanAmount < (2 * existingDebt))
+then
+if (rate.getLoanStatus() == null || !rate.getLoanStatus().startsWith("Rejected") ) {
+    rate.setLoanStatus("Approved");
+    rate.setLoanRate(5.25);
+    }
+end
