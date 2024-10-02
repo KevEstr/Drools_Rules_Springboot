@@ -46,13 +46,13 @@ Make sure you have the following requirements installed on your system:
 
 2. **🌐 API Endpoints**
 
-The system exposes the following endpoint for loan evaluation:
+   The system exposes the following endpoint for loan evaluation:
 
-**Evaluate Loan Application**
+   **Evaluate Loan Application**
 
-- **URL**: `/evaluar-prestamo`
-- **Method**: `POST`
-- **Description**: This endpoint evaluates a participant's loan application based on predefined business rules and returns the loan status (approved or rejected) and the corresponding interest rate.
+   - **URL**: `/evaluar-prestamo`
+   - **Method**: `POST`
+   - **Description**: This endpoint evaluates a participant's loan application based on predefined business rules and returns the loan status (approved or rejected) and the corresponding    interest rate.
   
 - **Request Body Example** (JSON):
 
